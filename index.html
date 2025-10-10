@@ -111,9 +111,15 @@
       background:rgba(255,255,255,.7);
       border-bottom:1px solid var(--border);
     }
-    .header-inner{display:flex;align-items:center;justify-content:space-between;height:64px}
-    nav a{font-size:.95rem;opacity:.9}
-    nav a:hover{text-decoration:underline}
+    .header-inner{display:flex;align-items:center;justify-content:space-between;min-height:64px;gap:16px}
+    .nav-links{display:flex;align-items:center;gap:1rem}
+    .nav-links a{font-size:.95rem;opacity:.9;margin:0;white-space:nowrap}
+    .nav-links a:hover{text-decoration:underline}
+    @media (max-width:768px){
+      .header-inner{flex-direction:column;align-items:flex-start;padding:12px 0 16px;gap:12px}
+      .nav-links{width:100%;flex-wrap:wrap;justify-content:flex-start;gap:.65rem 1rem}
+      .nav-links a{font-size:.9rem}
+    }
     .brand{display:flex;align-items:center;gap:.5rem}
     .brand-badge{
       height:36px;width:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;
@@ -275,13 +281,15 @@
         <img src="trimfy_logo_fondo_transparente.png" alt="Trimfy" style="height:36px;width:auto;">
         <span class="brand-name">Trimfy</span>
       </a>
-      <nav class="hide-sm">
-        <a href="#features" style="margin:0 .9rem">Funciones</a>
-        <a href="#como-funciona" style="margin:0 .9rem">Cómo funciona</a>
-        <a href="#politicas-cancelaciones" style="margin:0 .9rem">Políticas</a>
-        <a href="#peluqueros" style="margin:0 .9rem">Para peluqueros</a>
-        <a href="#faq" style="margin:0 .9rem">FAQ</a>
-        <a href="#sobre-nosotros" style="margin:0 .9rem">Sobre nosotros</a>
+      <nav class="nav-links">
+        <a href="#features">Funciones</a>
+        <a href="#como-funciona">C&oacute;mo funciona</a>
+        <a href="#politicas-cancelaciones">Pol&iacute;ticas</a>
+        <a href="#peluqueros">Para peluqueros</a>
+        <a href="#faq">FAQ</a>
+        <a href="#sobre-nosotros">Sobre nosotros</a>
+        <a href="Policies/PoliticadePrivacidad.html">Privacidad</a>
+        <a href="Policies/CondicionesUso.html">Condiciones</a>
       </nav>
       <div style="display:flex;align-items:center;gap:.5rem">
         <a href="#descargar" class="btn" style="display:none" id="dl-desktop">
@@ -524,6 +532,8 @@
         <a class="underline" href="#sobre-nosotros">Sobre nosotros</a>
         <a class="underline" href="#peluqueros">Únete como peluquero/a</a>
         <a class="underline" href="#faq">FAQ</a>
+        <a class="underline" href="Policies/PoliticadePrivacidad.html">Pol&iacute;tica de Privacidad</a>
+        <a class="underline" href="Policies/CondicionesUso.html">Condiciones de Uso</a>
       </div>
     </div>
   </footer>
