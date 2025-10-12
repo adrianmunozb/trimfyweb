@@ -28,7 +28,7 @@
     const db = getFirestore(app);
 
     // Make Firebase functions available globally
-    window.submitEmail = async function(email, source) {
+    window.submitEmail = async function(email, source, role) {
       try {
         // Add timeout to prevent infinite loading
         const timeoutPromise = new Promise((_, reject) => 
@@ -39,6 +39,7 @@
           addDoc(collection(db, "emails"), {
             email: email,
             source: source, // 'hero' or 'peluqueros'
+            role: role,
             timestamp: serverTimestamp(),
             ip: await getClientIP()
           }),
@@ -55,6 +56,7 @@
           emails.push({
             email: email,
             source: source,
+            role: role,
             timestamp: new Date().toISOString(),
             saved_locally: true
           });
@@ -310,7 +312,12 @@
           </p>
           
 <form class="row" data-alert style="margin-top:24px;max-width:500px">
-  <input class="input" type="email" placeholder="Tu correo profesional" required />
+  <input class="input" type="email" placeholder="Tu correo" aria-label="Correo electrónico" required />
+  <select class="input" name="role" aria-label="Selecciona si eres peluquero o cliente" required>
+    <option value="" disabled selected>Selecciona tu perfil</option>
+    <option value="peluquero">Soy peluquero/a</option>
+    <option value="cliente">Soy cliente</option>
+  </select>
   <button class="btn" type="submit">Avísame</button>
 </form>
 
@@ -452,7 +459,12 @@
           <p class="muted">Haz crecer tu negocio y conecta con más clientes a través de Trimfy.</p>
         </div>
         <form class="row" data-alert style="margin:24px auto 0;max-width:520px">
-          <input class="input" type="email" placeholder="Tu correo profesional" required />
+          <input class="input" type="email" placeholder="Tu correo" aria-label="Correo electrónico" required />
+          <select class="input" name="role" aria-label="Selecciona si eres peluquero o cliente" required>
+            <option value="" disabled selected>Selecciona tu perfil</option>
+            <option value="peluquero">Soy peluquero/a</option>
+            <option value="cliente">Soy cliente</option>
+          </select>
           <button class="btn" type="submit">Avísame</button>
         </form>
       </div>
@@ -549,9 +561,15 @@
         
         const emailInput = form.querySelector('input[type="email"]');
         const submitButton = form.querySelector('button[type="submit"]');
+        const roleSelect = form.querySelector('select[name="role"]');
         const email = emailInput.value.trim();
+        const role = roleSelect ? roleSelect.value : '';
         
         if(!email) return;
+        if(!role) {
+          showNotification('Selecciona si eres peluquero/a o cliente antes de continuar.', 'error');
+          return;
+        }
         
         // Determine source based on form location
         const source = form.closest('#peluqueros') ? 'peluqueros' : 'hero';
@@ -563,17 +581,19 @@
         
         try {
           // Submit to Firebase
-          const result = await window.submitEmail(email, source);
+          const result = await window.submitEmail(email, source, role);
           
           if(result.success) {
             // Success message
             showNotification('¡Gracias! Te avisaremos en tu correo: ' + email, 'success');
             form.reset();
+            if(roleSelect) roleSelect.selectedIndex = 0;
           } else {
             // Check if it was saved locally
             if(result.error && result.error.includes('timeout')) {
               showNotification('Email guardado localmente. Te avisaremos cuando esté disponible.', 'success');
               form.reset();
+              if(roleSelect) roleSelect.selectedIndex = 0;
             } else {
               throw new Error(result.error);
             }
@@ -583,11 +603,12 @@
           
           // Check if email was saved locally as fallback
           const localEmails = JSON.parse(localStorage.getItem('trimfy_emails') || '[]');
-          const wasSavedLocally = localEmails.some(e => e.email === email);
+          const wasSavedLocally = localEmails.some(e => e.email === email && e.role === role);
           
           if(wasSavedLocally) {
             showNotification('Email guardado localmente. Te avisaremos cuando esté disponible.', 'success');
             form.reset();
+            if(roleSelect) roleSelect.selectedIndex = 0;
           } else {
             showNotification('Error al enviar el email. Inténtalo de nuevo.', 'error');
           }
