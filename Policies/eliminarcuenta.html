@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Eliminar tu cuenta | Trimfy</title>
+  <style>
+    :root{
+      --navy:#0B1D3A;
+      --navyDark:#071127;
+      --navyLight:#132a52;
+      --garnet:#7B1E3B;
+      --garnetLight:#9b2c3c;
+      --teal:#1f9fa8;
+      --text:#111827;
+      --muted:#6b7280;
+      --mutedBg:#f3f4f6;
+      --border:#e5e7eb;
+      --card:#ffffff;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";
+      color:var(--text);
+      background:var(--mutedBg);
+      line-height:1.7;
+    }
+    a{color:inherit;text-decoration:none}
+    a.underline{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:4px}
+    .container{max-width:960px;margin:0 auto;padding:0 24px}
+    .hero{
+      background:linear-gradient(145deg,var(--navyDark),var(--navy));
+      color:#fff;
+      padding:96px 0 80px;
+      position:relative;
+      overflow:hidden;
+    }
+    .hero::before,
+    .hero::after{
+      content:"";
+      position:absolute;
+      border-radius:50%;
+      opacity:0.16;
+      pointer-events:none;
+      background:radial-gradient(circle at center,rgba(255,255,255,0.24) 0,rgba(255,255,255,0) 70%);
+    }
+    .hero::before{
+      top:-120px;
+      left:-140px;
+      width:320px;
+      height:320px;
+    }
+    .hero::after{
+      bottom:-180px;
+      right:-120px;
+      width:420px;
+      height:420px;
+    }
+    .hero > .container{position:relative;z-index:1}
+    .back-link{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-size:0.95rem;
+      color:rgba(255,255,255,0.8);
+      margin-bottom:24px;
+      transition:opacity .2s ease;
+    }
+    .back-link:hover{opacity:.85}
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:0.5rem 1.05rem;
+      border-radius:999px;
+      background:rgba(255,255,255,0.1);
+      border:1px solid rgba(255,255,255,0.18);
+      font-weight:600;
+      letter-spacing:0.02em;
+      text-transform:uppercase;
+      font-size:0.75rem;
+    }
+    .badge svg{
+      width:16px;
+      height:16px;
+    }
+    .hero h1{
+      font-size:2.9rem;
+      margin:22px 0 16px;
+    }
+    .lead{
+      max-width:620px;
+      font-size:1.1rem;
+      color:rgba(255,255,255,0.88);
+      margin-bottom:18px;
+    }
+    .meta{
+      font-size:0.95rem;
+      color:rgba(255,255,255,0.78);
+      margin:0;
+    }
+    main{position:relative;z-index:1}
+    .content{
+      margin-top:-56px;
+      padding-bottom:120px;
+    }
+    .grid{
+      display:grid;
+      gap:24px;
+    }
+    @media (min-width:960px){
+      .grid.two-columns{
+        grid-template-columns:1.2fr 1fr;
+      }
+    }
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:24px;
+      padding:32px 36px;
+      box-shadow:0 24px 56px rgba(11,29,58,0.08);
+    }
+    .card h2{
+      margin-top:0;
+      margin-bottom:16px;
+      font-size:1.4rem;
+    }
+    .card p{margin-top:0;margin-bottom:12px}
+    .card ul{
+      padding-left:20px;
+      margin:12px 0 0;
+    }
+    .card ul li + li{margin-top:8px}
+    .callout{
+      border-left:4px solid var(--teal);
+      padding-left:18px;
+      margin-top:20px;
+    }
+    .steps{
+      counter-reset:step;
+      list-style:none;
+      margin:0;
+      padding:0;
+    }
+    .steps > li{
+      counter-increment:step;
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:22px;
+      padding:28px 32px 28px 72px;
+      position:relative;
+      box-shadow:0 20px 48px rgba(11,29,58,0.06);
+    }
+    .steps > li + li{margin-top:18px}
+    .steps > li::before{
+      content:counter(step,decimal-leading-zero);
+      position:absolute;
+      top:28px;
+      left:28px;
+      width:36px;
+      height:36px;
+      border-radius:12px;
+      background:var(--navyLight);
+      color:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:600;
+    }
+    .status-list{
+      display:grid;
+      gap:16px;
+      margin-top:4px;
+      padding:0;
+      list-style:none;
+    }
+    .status-item{
+      display:flex;
+      align-items:flex-start;
+      gap:12px;
+    }
+    .status-icon{
+      margin-top:4px;
+      width:20px;
+      height:20px;
+      border-radius:50%;
+      background:rgba(31,159,168,0.12);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:var(--teal);
+      font-size:0.75rem;
+      font-weight:700;
+    }
+    footer{
+      padding:48px 0;
+      color:#fff;
+      background:var(--navyDark);
+    }
+    footer a{color:rgba(255,255,255,0.9)}
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="container">
+      <a class="back-link" href="../index.html">
+        <span aria-hidden="true">&#8592;</span>
+        Volver a Trimfy
+      </a>
+      <span class="badge">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M12 21c4.97 0 9-4.03 9-9s-4.03-9-9-9-9 4.03-9 9 4.03 9 9 9Zm0 0V9m0 7v.01" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Centro de ayuda
+      </span>
+      <h1>Solicitar la eliminaci&#243;n de tu cuenta</h1>
+      <p class="lead">Si decides dejar de utilizar Trimfy, puedes eliminar tu cuenta y solicitarnos el borrado de tus datos personales. Te explicamos c&#243;mo hacerlo paso a paso.</p>
+      <p class="meta">&#218;ltima actualizaci&#243;n: octubre 2025</p>
+    </div>
+  </header>
+
+  <main>
+    <div class="content">
+      <div class="container">
+        <div class="grid two-columns">
+          <div class="card">
+            <h2>Eliminaci&#243;n r&#225;pida desde la app</h2>
+            <ol class="steps">
+              <li>
+                <strong>Abre Trimfy y entra en tu perfil.</strong>
+                <p>En la parte superior derecha encontrar&#225;s el men&#250; de configuraci&#243;n.</p>
+              </li>
+              <li>
+                <strong>Selecciona &#8220;Privacidad y seguridad&#8221;.</strong>
+                <p>Dentro ver&#225;s la secci&#243;n <em>Cerrar cuenta</em> con toda la informaci&#243;n relevante.</p>
+              </li>
+              <li>
+                <strong>Confirma tu identidad.</strong>
+                <p>Te pediremos verificar tu correo o n&#250;mero de tel&#233;fono para asegurarnos de que eres t&#250;.</p>
+              </li>
+              <li>
+                <strong>Elige el motivo y confirma.</strong>
+                <p>Tu cuenta se desactiva al instante y se programa la eliminaci&#243;n definitiva.</p>
+              </li>
+            </ol>
+            <div class="callout">
+              <p>&#191;No puedes acceder a la app? Solicita la baja escribiendo a <a class="underline" href="mailto:trimfy@gmail.com?subject=Solicitud%20de%20eliminaci%C3%B3n%20de%20cuenta">trimfy@gmail.com</a> desde el correo asociado.</p>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>&#191;Qu&#233; ocurre con tus datos?</h2>
+            <p>Seguimos las obligaciones del RGPD y la LOPDGDD:</p>
+            <ul>
+              <li>Al confirmar la eliminaci&#243;n programamos el borrado completo en un m&#225;ximo de 30 d&#237;as.</li>
+              <li>Conservamos la informaci&#243;n imprescindible (facturaci&#243;n, incidencias abiertas) durante el periodo legal necesario.</li>
+              <li>En 72 horas recibir&#225;s la confirmaci&#243;n de la desactivaci&#243;n y, en cuanto finalice el proceso, un segundo correo con la certificaci&#243;n del borrado.</li>
+            </ul>
+            <div class="callout">
+              <strong>Importante:</strong>
+              <p>Si tienes reservas pendientes, pedidos o cobros en curso, debemos cerrarlos antes de completar la eliminaci&#243;n.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid" style="margin-top:28px">
+          <div class="card">
+            <h2>Canales de contacto alternativos</h2>
+            <p>Si necesitas ayuda adicional, escr&#237;benos indicando:</p>
+            <ul>
+              <li>Nombre y apellidos que figuran en la cuenta.</li>
+              <li>Correo o tel&#233;fono asociado.</li>
+              <li>Motivo de la eliminaci&#243;n (opcional, nos ayuda a mejorar).</li>
+              <li>Documentaci&#243;n adicional si act&#250;as en nombre de otra persona o empresa.</li>
+            </ul>
+            <p>Responderemos en un m&#225;ximo de 72 horas laborables.</p>
+            <div class="callout">
+              <p>
+                <strong>Correo de soporte:</strong>
+                <a class="underline" href="mailto:trimfy@gmail.com?subject=Soporte%20eliminaci%C3%B3n%20de%20cuenta">
+                  trimfy@gmail.com
+                </a>
+              </p>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>Estados de la solicitud</h2>
+            <ul class="status-list">
+              <li class="status-item">
+                <span class="status-icon">1</span>
+                <div>
+                  <strong>Recibida</strong>
+                  <p>Confirmamos que hemos recibido tu petici&#243;n y desactivamos el acceso a la cuenta.</p>
+                </div>
+              </li>
+              <li class="status-item">
+                <span class="status-icon">2</span>
+                <div>
+                  <strong>En revisi&#243;n</strong>
+                  <p>Comprobamos pagos, suscripciones y obligaciones pendientes. Te contactamos si necesitamos informaci&#243;n adicional.</p>
+                </div>
+              </li>
+              <li class="status-item">
+                <span class="status-icon">3</span>
+                <div>
+                  <strong>Completada</strong>
+                  <p>Eliminamos los datos y te enviamos la confirmaci&#243;n final. No podr&#225;s recuperar la cuenta ni el historial.</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:28px">
+          <h2>Preguntas frecuentes</h2>
+          <p><strong>&#191;Puedo recuperar mi cuenta?</strong></p>
+          <p>Durante las primeras 48 horas tras la solicitud podemos revertir la eliminaci&#243;n si nos contactas inmediatamente. Pasado ese plazo, el proceso es irreversible.</p>
+
+          <p><strong>&#191;Qu&#233; ocurre si soy profesional o comercio?</strong></p>
+          <p>Debes asegurarte de que no existen pagos pendientes hacia clientes o hacia Trimfy. Conservaremos los datos de facturaci&#243;n el tiempo legalmente exigido.</p>
+
+          <p><strong>&#191;C&#243;mo elimino los datos de mi agenda o clientes guardados?</strong></p>
+          <p>Al eliminar tu cuenta eliminamos tambi&#233;n los datos asociados en tu agenda, salvo las citas que ya hayan sido atendidas y puedan requerirse para obligaciones contables o legales.</p>
+
+          <p><strong>&#191;Puedo solicitar un informe de mis datos antes de eliminarlos?</strong></p>
+          <p>Claro. Pide una copia de tus datos personales en <a class="underline" href="mailto:trimfy@gmail.com?subject=Copia%20de%20datos%20antes%20de%20eliminaci%C3%B3n">trimfy@gmail.com</a> y la prepararemos en un plazo m&#225;ximo de 15 d&#237;as.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      &copy; <span id="year"></span> Trimfy. Todos los derechos reservados. | Escr&#237;benos a <a href="mailto:trimfy@gmail.com">trimfy@gmail.com</a>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
