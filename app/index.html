@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Descargar Trimfy</title>
+    <meta name="description" content="Descarga Trimfy - Tu app para reservar cortes de pelo">
+
+    <!-- Open Graph for social sharing -->
+    <meta property="og:title" content="Trimfy - Reserva Cortes de Pelo">
+    <meta property="og:description" content="Descarga Trimfy y reserva tu próximo corte de pelo">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://trimfy.es/app">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+        }
+
+        .container {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 30px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        p {
+            font-size: 16px;
+            opacity: 0.8;
+            margin-bottom: 30px;
+        }
+
+        .manual-link {
+            display: inline-block;
+            padding: 15px 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .manual-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="spinner"></div>
+        <h1>Redirigiendo a Trimfy...</h1>
+        <p>Si no eres redirigido automáticamente:</p>
+        <a href="#" id="manualLink" class="manual-link">Descargar Trimfy</a>
+    </div>
+
+    <script>
+        (function () {
+            // App Store and Play Store URLs
+            const appStoreUrl = 'https://apps.apple.com/es/app/trimfy-reserva-cortes-de-pelo/id6755109420';
+            const playStoreUrl = 'https://play.google.com/store/search?q=trimfy&c=apps&hl=es_419';
+
+            // App URL scheme (if you have one configured in your app)
+            const appScheme = 'trimfy://';
+
+            // Detect user's platform
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            const isIOS = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
+            const isAndroid = /android/i.test(userAgent);
+
+            // Determine the store URL based on platform
+            let storeUrl;
+            if (isIOS) {
+                storeUrl = appStoreUrl;
+            } else if (isAndroid) {
+                storeUrl = playStoreUrl;
+            } else {
+                // Desktop or unknown - default to App Store
+                storeUrl = appStoreUrl;
+            }
+
+            // Update manual link
+            document.getElementById('manualLink').href = storeUrl;
+
+            // Try to open the app first, then fallback to store
+            if (isIOS || isAndroid) {
+                // Try to open the app
+                const appOpenTimeout = setTimeout(function () {
+                    // If app didn't open, redirect to store
+                    window.location.href = storeUrl;
+                }, 1500);
+
+                // Attempt to open the app
+                window.location.href = appScheme;
+
+                // If the page becomes hidden (app opened), clear the timeout
+                document.addEventListener('visibilitychange', function () {
+                    if (document.hidden) {
+                        clearTimeout(appOpenTimeout);
+                    }
+                });
+            } else {
+                // Desktop: redirect directly to store after a short delay
+                setTimeout(function () {
+                    window.location.href = storeUrl;
+                }, 1500);
+            }
+        })();
+    </script>
+</body>
+
+</html>
