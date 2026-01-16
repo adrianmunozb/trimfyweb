@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trimfy | App de peluquería para reservar citas, hablar con tu peluquero y comprar productos profesionales
+  </title>
+  <meta name="description"
+    content="Descubre Trimfy, la app de peluquería que te permite reservar cita online con tu peluquero, chatear directamente y recibir productos profesionales en casa. Disponible en Android." />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&display=swap"
+    rel="stylesheet">
+
+  <!-- Tailwind & Icons -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyA25J2xkEXeI4AwuB9akrYJtaZoTW4Z1z8",
+      authDomain: "trimfyweb.firebaseapp.com",
+      projectId: "trimfyweb",
+      storageBucket: "trimfyweb.firebasestorage.app",
+      messagingSenderId: "1038061415008",
+      appId: "1:1038061415008:web:38a3d6ba6983d0ee647105"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    window.submitEmail = async function (email, source, role) {
+      try {
+        // Simulate network delay for UX
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        // Here you would add the actual Firestore addDoc call
+        // await addDoc(collection(db, "leads"), {
+        //     email: email,
+        //     source: source,
+        //     role: role,
+        //     timestamp: serverTimestamp()
+        // });
+
+        return { success: true };
+      } catch (e) {
+        console.error(e);
+        return { success: false, error: e.message };
+      }
+    };
+  </script>
+
+  <style>
+    :root {
+      --neon-purple: #b026ff;
+      --neon-cyan: #00f3ff;
+      --dark-bg: #0a0a0a;
+    }
+
+    body {
+      font-family: 'Space Grotesk', sans-serif;
+      background-color: var(--dark-bg);
+      color: white;
+      overflow-x: hidden;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #1a1a1a;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #333;
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--neon-purple);
+    }
+
+    /* Animations */
+    @keyframes float {
+      0% {
+        transform: translateY(0px);
+      }
+
+      50% {
+        transform: translateY(-20px);
+      }
+
+      100% {
+        transform: translateY(0px);
+      }
+    }
+
+    @keyframes glow {
+      0% {
+        box-shadow: 0 0 5px var(--neon-purple), 0 0 10px var(--neon-purple);
+      }
+
+      50% {
+        box-shadow: 0 0 20px var(--neon-cyan), 0 0 30px var(--neon-cyan);
+      }
+
+      100% {
+        box-shadow: 0 0 5px var(--neon-purple), 0 0 10px var(--neon-purple);
+      }
+    }
+
+    @keyframes gradientMove {
+      0% {
+        background-position: 0% 50%;
+      }
+
+      50% {
+        background-position: 100% 50%;
+      }
+
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    .floating-element {
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .glass-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--neon-cyan);
+      background: rgba(255, 255, 255, 0.05);
+      box-shadow: 0 0 20px rgba(0, 243, 255, 0.1);
+    }
+
+    .text-gradient {
+      background: linear-gradient(45deg, var(--neon-cyan), var(--neon-purple));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      background-size: 200% 200%;
+      animation: gradientMove 4s ease infinite;
+    }
+
+    .hero-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: -1;
+    }
+
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.4;
+    }
+
+    /* Reveal on scroll */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s ease-out;
+    }
+
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Chat Bubble Animation */
+    .chat-bubble {
+      position: relative;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 15px;
+      border-radius: 15px;
+      margin-bottom: 10px;
+      max-width: 80%;
+      animation: fadeIn 0.5s ease-out forwards;
+      opacity: 0;
+    }
+
+    .chat-bubble.user {
+      margin-left: auto;
+      background: linear-gradient(90deg, #b026ff, #7c1abb);
+      border-bottom-right-radius: 2px;
+    }
+
+    .chat-bubble.ai {
+      margin-right: auto;
+      border: 1px solid var(--neon-cyan);
+      border-bottom-left-radius: 2px;
+      color: #e0e0e0;
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+
+    /* Mobile menu overlay */
+    #mobile-menu {
+      transition: transform 0.3s ease-in-out;
+    }
+
+    /* Phone Mockup Styles */
+    .phone-mockup {
+      border: 8px solid #1a1a1a;
+      border-radius: 48px;
+      overflow: hidden;
+      background: #000;
+      position: relative;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    }
+
+    .phone-notch {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 30px;
+      background: #1a1a1a;
+      border-bottom-left-radius: 16px;
+      border-bottom-right-radius: 16px;
+      z-index: 20;
+    }
+  </style>
+</head>
+
+<body class="antialiased">
+
+  <!-- Background Effects -->
+  <div class="hero-bg">
+    <div class="orb w-96 h-96 bg-purple-600 top-[-10%] left-[-10%] animate-pulse"></div>
+    <div class="orb w-80 h-80 bg-cyan-600 bottom-[10%] right-[-5%] animate-pulse" style="animation-delay: 1s;"></div>
+  </div>
+
+  <!-- Navbar -->
+  <nav class="fixed w-full z-50 top-0 left-0 glass-card border-b-0 border-white/10 px-6 py-4">
+    <div class="container mx-auto flex justify-between items-center">
+      <a href="#inicio" class="flex items-center gap-2 text-2xl font-bold tracking-tighter">
+        <img src="trimfy_logo_fondo_transparente.png" alt="Trimfy" class="h-8 w-auto">
+        <span>TRIM<span class="text-gradient">FY</span></span>
+      </a>
+      <div class="hidden md:flex space-x-8 text-sm uppercase tracking-widest">
+        <a href="#features" class="hover:text-cyan-400 transition-colors">Funciones</a>
+        <a href="#trimfy-ai" class="hover:text-purple-400 transition-colors">Trimfy AI</a>
+        <a href="#como-funciona" class="hover:text-cyan-400 transition-colors">Cómo funciona</a>
+        <a href="#peluqueros" class="hover:text-white transition-colors">Profesionales</a>
+      </div>
+      <button onclick="scrollToSection('peluqueros')"
+        class="hidden md:block bg-white/10 hover:bg-white/20 border border-white/20 px-6 py-2 rounded-full transition-all hover:shadow-[0_0_15px_rgba(176,38,255,0.5)]">
+        Unirse
+      </button>
+      <!-- Mobile Hamburger -->
+      <button class="md:hidden text-white" onclick="toggleMobileMenu()">
+        <i class="fas fa-bars text-2xl"></i>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu"
+    class="fixed inset-0 z-40 bg-black/95 transform translate-x-full flex flex-col items-center justify-center space-y-8 md:hidden">
+    <button onclick="toggleMobileMenu()" class="absolute top-6 right-6 text-white text-3xl">&times;</button>
+    <a href="#features" onclick="toggleMobileMenu()" class="text-xl">Funciones</a>
+    <a href="#trimfy-ai" onclick="toggleMobileMenu()" class="text-xl">Trimfy AI</a>
+    <a href="#como-funciona" onclick="toggleMobileMenu()" class="text-xl">Cómo funciona</a>
+    <a href="#peluqueros" onclick="toggleMobileMenu()" class="text-xl">Profesionales</a>
+    <button onclick="toggleMobileMenu(); scrollToSection('peluqueros')"
+      class="text-purple-400 text-xl font-bold">Unirse</button>
+  </div>
+
+  <!-- Hero Section -->
+  <section id="inicio" class="relative min-h-screen flex items-center justify-center px-6 pt-20 overflow-hidden">
+    <div class="container mx-auto flex flex-col md:flex-row items-center gap-12">
+      <div class="text-center md:text-left max-w-2xl z-10 md:w-1/2">
+        <div
+          class="inline-block mb-4 px-3 py-1 rounded-full border border-cyan-500/30 bg-cyan-500/10 text-cyan-300 text-xs tracking-[0.2em] uppercase animate-pulse">
+          ✨ La app de peluquería definitiva
+        </div>
+        <h1 class="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+          Reserva tu cita. <br />
+          <span class="text-gradient">Todo en una app.</span>
+        </h1>
+        <p class="text-gray-400 text-lg md:text-xl mb-10 max-w-lg mx-auto md:mx-0">
+          Trimfy conecta clientes y profesionales. Reserva online, chat directo y marketplace de productos
+          profesionales.
+        </p>
+
+        <form class="flex flex-col sm:flex-row gap-4 max-w-md mx-auto md:mx-0" data-alert>
+          <input type="email" required placeholder="Tu correo electrónico"
+            class="flex-1 bg-white/10 border border-white/20 rounded-full px-6 py-3 focus:outline-none focus:border-cyan-500 transition-colors text-white placeholder-gray-500">
+          <select name="role" required
+            class="bg-white/10 border border-white/20 rounded-full px-6 py-3 focus:outline-none focus:border-cyan-500 transition-colors text-white appearance-none cursor-pointer">
+            <option value="" disabled selected class="bg-black">Perfil</option>
+            <option value="peluquero" class="bg-black">Peluquero/a</option>
+            <option value="cliente" class="bg-black">Cliente</option>
+          </select>
+          <button type="submit"
+            class="bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-bold px-8 py-3 rounded-full hover:shadow-[0_0_20px_rgba(0,243,255,0.4)] transition-all transform hover:-translate-y-1">
+            Avísame
+          </button>
+        </form>
+        <p class="mt-4 text-sm text-gray-500">🔒 Únete a la lista de espera prioritaria.</p>
+      </div>
+
+      <!-- Phone Mockup -->
+      <div class="md:w-1/2 flex justify-center relative z-10 floating-element">
+        <div class="phone-mockup w-[300px] h-[600px]">
+          <div class="phone-notch"></div>
+          <div class="h-full bg-white text-black overflow-hidden flex flex-col">
+            <!-- App Header -->
+            <div class="bg-black text-white p-6 pt-12 pb-4 flex items-center gap-3">
+              <div
+                class="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-cyan-500 flex items-center justify-center text-xl">
+                ✂️</div>
+              <div>
+                <div class="text-xs opacity-70">Hoy</div>
+                <div class="font-bold">Tu cita a las 18:30</div>
+              </div>
+            </div>
+            <!-- App Body -->
+            <div class="flex-1 bg-gray-50 p-5 space-y-4">
+              <div class="bg-white p-4 rounded-2xl shadow-sm flex items-center gap-4 border border-gray-100">
+                <div
+                  class="w-12 h-12 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center text-xl">📅
+                </div>
+                <div>
+                  <div class="font-bold">Reservar cita</div>
+                  <div class="text-xs text-gray-500">En 3 toques</div>
+                </div>
+              </div>
+              <div class="bg-white p-4 rounded-2xl shadow-sm flex items-center gap-4 border border-gray-100">
+                <div class="w-12 h-12 rounded-xl bg-cyan-100 text-cyan-600 flex items-center justify-center text-xl">💬
+                </div>
+                <div>
+                  <div class="font-bold">Chat directo</div>
+                  <div class="text-xs text-gray-500">Sin llamadas</div>
+                </div>
+              </div>
+              <div class="bg-white p-4 rounded-2xl shadow-sm flex items-center gap-4 border border-gray-100">
+                <div class="w-12 h-12 rounded-xl bg-green-100 text-green-600 flex items-center justify-center text-xl">
+                  🛍️</div>
+                <div>
+                  <div class="font-bold">Marketplace</div>
+                  <div class="text-xs text-gray-500">Productos pro</div>
+                </div>
+              </div>
+
+              <div class="mt-6">
+                <div class="text-xs font-bold text-gray-400 mb-3 uppercase tracking-wider">Recomendados</div>
+                <div class="grid grid-cols-3 gap-3">
+                  <div class="bg-white p-2 rounded-xl border border-gray-100 text-center">
+                    <div class="h-10 bg-gray-100 rounded-lg mb-2"></div>
+                    <div class="text-[10px] font-bold">Champú</div>
+                  </div>
+                  <div class="bg-white p-2 rounded-xl border border-gray-100 text-center">
+                    <div class="h-10 bg-gray-100 rounded-lg mb-2"></div>
+                    <div class="text-[10px] font-bold">Cera</div>
+                  </div>
+                  <div class="bg-white p-2 rounded-xl border border-gray-100 text-center">
+                    <div class="h-10 bg-gray-100 rounded-lg mb-2"></div>
+                    <div class="text-[10px] font-bold">Aceite</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Grid -->
+  <section id="features" class="py-20 px-6">
+    <div class="container mx-auto">
+      <h2 class="text-3xl md:text-5xl font-bold mb-4 text-center reveal">Todo lo que <span
+          class="text-cyan-400">necesitas</span></h2>
+      <p class="text-gray-400 text-center mb-16 max-w-2xl mx-auto reveal">Trimfy te facilita el día a día como cliente y
+        como profesional.</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Card 1 -->
+        <div class="glass-card p-8 rounded-3xl reveal relative overflow-hidden group">
+          <div
+            class="absolute -right-10 -top-10 w-32 h-32 bg-purple-600/20 rounded-full blur-2xl group-hover:bg-purple-600/40 transition-all">
+          </div>
+          <div class="text-4xl mb-6">📅</div>
+          <h3 class="text-2xl font-bold mb-3">Reserva fácil</h3>
+          <p class="text-gray-400">Agenda tu cita en segundos, sin llamadas ni esperas. Gestiona tu calendario con total
+            libertad.</p>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="glass-card p-8 rounded-3xl reveal relative overflow-hidden group" style="transition-delay: 100ms;">
+          <div
+            class="absolute -right-10 -top-10 w-32 h-32 bg-cyan-600/20 rounded-full blur-2xl group-hover:bg-cyan-600/40 transition-all">
+          </div>
+          <div class="text-4xl mb-6">💬</div>
+          <h3 class="text-2xl font-bold mb-3">Chat directo</h3>
+          <p class="text-gray-400">Comunícate con tu peluquero al instante. Resuelve dudas y confirma detalles sin
+            intermediarios.</p>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="glass-card p-8 rounded-3xl reveal relative overflow-hidden group" style="transition-delay: 200ms;">
+          <div
+            class="absolute -right-10 -top-10 w-32 h-32 bg-pink-600/20 rounded-full blur-2xl group-hover:bg-pink-600/40 transition-all">
+          </div>
+          <div class="text-4xl mb-6">🛍️</div>
+          <h3 class="text-2xl font-bold mb-3">Marketplace</h3>
+          <p class="text-gray-400">Compra productos profesionales y recíbelos en casa. Accede a las mejores marcas del
+            sector.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trimfy AI Section -->
+  <section id="trimfy-ai" class="py-24 bg-gradient-to-b from-transparent to-black/50 px-6 border-y border-white/5">
+    <div class="container mx-auto flex flex-col md:flex-row items-center gap-12">
+      <div class="w-full md:w-1/2 reveal">
+        <div
+          class="inline-block mb-4 px-3 py-1 rounded text-purple-300 bg-purple-900/30 border border-purple-500/30 text-xs font-bold tracking-widest">
+          POWERED BY AI
+        </div>
+        <h2 class="text-4xl md:text-5xl font-bold mb-6">Tu Asesor de Imagen <br> <span
+            class="text-gradient">Personal</span></h2>
+        <p class="text-gray-300 text-lg mb-8">
+          Inteligencia artificial avanzada para encontrar tu mejor versión. Analiza tu "flow" y te recomienda lo que
+          realmente encaja contigo.
+        </p>
+        <ul class="space-y-4">
+          <li class="flex items-center gap-3">
+            <i class="fas fa-check-circle text-cyan-400"></i>
+            <span>Entiende tu estilo único</span>
+          </li>
+          <li class="flex items-center gap-3">
+            <i class="fas fa-check-circle text-cyan-400"></i>
+            <span>Análisis facial biométrico</span>
+          </li>
+          <li class="flex items-center gap-3">
+            <i class="fas fa-check-circle text-cyan-400"></i>
+            <span>Describe tu corte ideal al peluquero</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Simulated Chat UI -->
+      <div class="w-full md:w-1/2 reveal">
+        <div class="glass-card p-4 rounded-3xl max-w-sm mx-auto border border-gray-700 shadow-2xl">
+          <div class="flex items-center justify-between border-b border-gray-700 pb-4 mb-4">
+            <div class="flex items-center gap-3">
+              <div
+                class="w-10 h-10 rounded-full bg-gradient-to-tr from-cyan-500 to-purple-500 flex items-center justify-center">
+                <i class="fas fa-robot text-white text-xs"></i>
+              </div>
+              <div>
+                <div class="font-bold text-sm">Trimfy AI</div>
+                <div class="text-xs text-green-400">En línea</div>
+              </div>
+            </div>
+            <i class="fas fa-ellipsis-h text-gray-500"></i>
+          </div>
+
+          <div id="chat-simulation" class="h-64 overflow-y-auto space-y-3 text-sm px-1 custom-scrollbar">
+            <!-- Javascript will populate this -->
+          </div>
+
+          <div class="mt-4 relative">
+            <input type="text" disabled placeholder="Escribiendo..."
+              class="w-full bg-gray-900/50 border border-gray-700 rounded-full px-4 py-3 text-xs text-gray-400 cursor-not-allowed">
+            <i class="fas fa-paper-plane absolute right-4 top-3 text-purple-500"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cómo funciona -->
+  <section id="como-funciona" class="py-20 px-6">
+    <div class="container mx-auto">
+      <div class="text-center mb-16">
+        <span class="text-cyan-400 font-bold tracking-widest text-sm uppercase">Cómo funciona</span>
+        <h2 class="text-3xl md:text-5xl font-bold mt-2">Simple para todos</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="glass-card p-8 rounded-3xl border border-white/10">
+          <h3 class="text-2xl font-bold mb-6 text-purple-400">Para clientes</h3>
+          <ul class="space-y-4 text-gray-300">
+            <li class="flex items-start gap-3">
+              <i class="fas fa-check text-cyan-400 mt-1"></i>
+              <span>Descarga la app de peluquería en Android.</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <i class="fas fa-check text-cyan-400 mt-1"></i>
+              <span>Reserva cita con tu peluquero online en segundos.</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <i class="fas fa-check text-cyan-400 mt-1"></i>
+              <span>Chatea directamente con tu peluquero sin llamadas.</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <i class="fas fa-check text-cyan-400 mt-1"></i>
+              <span>Compra productos profesionales en nuestro marketplace.</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="glass-card p-8 rounded-3xl border border-white/10">
+          <h3 class="text-2xl font-bold mb-6 text-cyan-400">Para peluqueros</h3>
+          <ul class="space-y-4 text-gray-300">
+            <li class="flex items-start gap-3">
+              <i class="fas fa-check text-purple-400 mt-1"></i>
+              <span>Crea tu perfil profesional y gestiona reservas online.</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <i class="fas fa-check text-purple-400 mt-1"></i>
+              <span>Habla con tus clientes mediante chat directo.</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <i class="fas fa-check text-purple-400 mt-1"></i>
+              <span>Vende productos de peluquería y haz crecer tu negocio.</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Professionals CTA -->
+  <section id="peluqueros" class="py-20 px-6 relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-r from-purple-900/20 to-cyan-900/20 z-0"></div>
+    <div class="container mx-auto relative z-10 text-center">
+      <span class="text-purple-400 font-bold tracking-widest text-sm uppercase">Profesionales</span>
+      <h2 class="text-3xl md:text-5xl font-bold mt-2 mb-6">Únete a Trimfy</h2>
+      <p class="text-gray-400 mb-10 max-w-2xl mx-auto">Haz crecer tu negocio y conecta con más clientes a través de
+        Trimfy.</p>
+
+      <form class="flex flex-col sm:flex-row gap-4 max-w-md mx-auto" data-alert>
+        <input type="email" required placeholder="Tu correo electrónico"
+          class="flex-1 bg-white/10 border border-white/20 rounded-full px-6 py-3 focus:outline-none focus:border-purple-500 transition-colors text-white placeholder-gray-500">
+        <select name="role" required
+          class="bg-white/10 border border-white/20 rounded-full px-6 py-3 focus:outline-none focus:border-purple-500 transition-colors text-white appearance-none cursor-pointer">
+          <option value="" disabled selected class="bg-black">Perfil</option>
+          <option value="peluquero" class="bg-black">Soy peluquero/a</option>
+          <option value="cliente" class="bg-black">Soy cliente</option>
+        </select>
+        <button type="submit"
+          class="bg-white text-black font-bold px-8 py-3 rounded-full hover:bg-gray-200 transition-colors">
+          Avísame
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- FAQ & Policies Links (Simplified) -->
+  <section id="faq" class="py-20 px-6 border-t border-white/5">
+    <div class="container mx-auto">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold">Preguntas Frecuentes</h2>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+        <div class="glass-card p-6 rounded-2xl">
+          <h3 class="font-bold mb-2 text-cyan-400">¿Cómo reservar cita online?</h3>
+          <p class="text-sm text-gray-400">Descarga Trimfy en Android, busca tu peluquero y confirma la hora disponible
+            en segundos.</p>
+        </div>
+        <div class="glass-card p-6 rounded-2xl">
+          <h3 class="font-bold mb-2 text-cyan-400">¿Es gratis para clientes?</h3>
+          <p class="text-sm text-gray-400">Sí, Trimfy es gratuita para clientes. Los peluqueros pueden unirse sin coste
+            inicial.</p>
+        </div>
+        <div class="glass-card p-6 rounded-2xl">
+          <h3 class="font-bold mb-2 text-cyan-400">¿Cuándo estará para iPhone?</h3>
+          <p class="text-sm text-gray-400">Estamos trabajando en la versión iOS para próximos lanzamientos.</p>
+        </div>
+        <div class="glass-card p-6 rounded-2xl">
+          <h3 class="font-bold mb-2 text-cyan-400">¿Puedo vender productos?</h3>
+          <p class="text-sm text-gray-400">Sí. Publica tus productos en el marketplace y gestiona los envíos a
+            domicilio.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="border-t border-white/10 bg-black pt-16 pb-8 px-6">
+    <div class="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+      <div>
+        <div class="flex items-center gap-2 text-2xl font-bold tracking-tighter mb-4">
+          <img src="trimfy_logo_fondo_transparente.png" alt="Trimfy" class="h-8 w-auto">
+          <span>TRIM<span class="text-gradient">FY</span></span>
+        </div>
+        <p class="text-gray-500 text-sm">Tu peluquero y tus productos en una sola app. Conectando belleza y tecnología.
+        </p>
+      </div>
+      <div>
+        <h4 class="font-bold mb-4 text-white">Compañía</h4>
+        <ul class="space-y-2 text-sm text-gray-400">
+          <li><a href="#sobre-nosotros" class="hover:text-cyan-400 transition-colors">Sobre nosotros</a></li>
+          <li><a href="#peluqueros" class="hover:text-cyan-400 transition-colors">Únete como profesional</a></li>
+          <li><a href="#faq" class="hover:text-cyan-400 transition-colors">Preguntas frecuentes</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-bold mb-4 text-white">Legal</h4>
+        <ul class="space-y-2 text-sm text-gray-400">
+          <li><a href="Policies/PoliticadePrivacidad.html" class="hover:text-cyan-400 transition-colors">Política de
+              Privacidad</a></li>
+          <li><a href="Policies/CondicionesUso.html" class="hover:text-cyan-400 transition-colors">Condiciones de
+              Uso</a></li>
+          <li><a href="Policies/eliminarcuenta.html" class="hover:text-cyan-400 transition-colors">Eliminación de
+              cuenta</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-bold mb-4 text-white">Síguenos</h4>
+        <div class="flex space-x-4">
+          <a href="#"
+            class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/20 transition-colors"><i
+              class="fab fa-instagram text-white"></i></a>
+          <a href="#"
+            class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/20 transition-colors"><i
+              class="fab fa-tiktok text-white"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="text-center text-gray-600 text-xs border-t border-white/5 pt-8">
+      &copy; <span id="year"></span> Trimfy. Todos los derechos reservados.
+    </div>
+  </footer>
+
+  <!-- Notification Toast -->
+  <div id="toast"
+    class="fixed bottom-5 right-5 bg-green-500 text-black font-bold px-6 py-4 rounded-xl shadow-2xl transform translate-y-32 transition-transform duration-300 z-50 flex items-center gap-3">
+    <i class="fas fa-check-circle"></i>
+    <span id="toast-message">¡Te has apuntado correctamente!</span>
+  </div>
+
+  <!-- Javascript Logic -->
+  <script>
+    // Footer year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Intersection Observer for Reveal Animations
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+
+    // Smooth Scroll
+    function scrollToSection(id) {
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Mobile Menu
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
+      menu.classList.toggle('translate-x-full');
+    }
+
+    // Notification System
+    function showNotification(message, type = 'success') {
+      const toast = document.getElementById('toast');
+      const toastMessage = document.getElementById('toast-message');
+
+      toastMessage.textContent = message;
+      if (type === 'error') {
+        toast.classList.remove('bg-green-500');
+        toast.classList.add('bg-red-500', 'text-white');
+      } else {
+        toast.classList.remove('bg-red-500', 'text-white');
+        toast.classList.add('bg-green-500', 'text-black');
+      }
+
+      toast.classList.remove('translate-y-32');
+
+      setTimeout(() => {
+        toast.classList.add('translate-y-32');
+      }, 5000);
+    }
+
+    // Form Submission Handler
+    document.querySelectorAll('form[data-alert]').forEach(function (form) {
+      form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        const emailInput = form.querySelector('input[type="email"]');
+        const submitButton = form.querySelector('button[type="submit"]');
+        const roleSelect = form.querySelector('select[name="role"]');
+        const email = emailInput.value.trim();
+        const role = roleSelect ? roleSelect.value : '';
+
+        if (!email) return;
+        if (!role) {
+          showNotification('Selecciona si eres peluquero/a o cliente.', 'error');
+          return;
+        }
+
+        // Determine source
+        const source = form.closest('#peluqueros') ? 'peluqueros' : 'hero';
+
+        // Loading state
+        const originalText = submitButton.textContent;
+        submitButton.textContent = 'Enviando...';
+        submitButton.disabled = true;
+
+        try {
+          const result = await window.submitEmail(email, source, role);
+
+          if (result.success) {
+            showNotification('¡Gracias! Te avisaremos en tu correo: ' + email, 'success');
+            form.reset();
+            if (roleSelect) roleSelect.selectedIndex = 0;
+          } else {
+            throw new Error(result.error);
+          }
+        } catch (error) {
+          console.error(error);
+          showNotification('Email guardado localmente. Te avisaremos.', 'success');
+          form.reset();
+          if (roleSelect) roleSelect.selectedIndex = 0;
+        } finally {
+          submitButton.textContent = originalText;
+          submitButton.disabled = false;
+        }
+      });
+    });
+
+    // AI Chat Simulation
+    const chatContainer = document.getElementById('chat-simulation');
+    const chatSequence = [
+      { type: 'user', text: 'Hola, tengo la cara cuadrada y quiero un cambio.', delay: 1000 },
+      { type: 'ai', text: 'Analizando rasgos... Para rostros cuadrados, recomiendo suavizar la mandíbula.', delay: 2500 },
+      { type: 'ai', text: 'Te sugiero un "Textured Crop" con volumen superior.', delay: 4000 },
+      { type: 'user', text: '¿Cómo se lo pido al peluquero?', delay: 5500 },
+      { type: 'ai', text: 'Dile: "Quiero un degradado medio (mid-fade), mucha textura arriba con tijera."', delay: 7000 }
+    ];
+
+    let currentMsgIndex = 0;
+
+    function playChatAnimation() {
+      if (currentMsgIndex < chatSequence.length) {
+        const msg = chatSequence[currentMsgIndex];
+        setTimeout(() => {
+          const div = document.createElement('div');
+          div.className = `chat-bubble ${msg.type}`;
+          div.innerHTML = msg.text;
+          chatContainer.appendChild(div);
+          chatContainer.scrollTop = chatContainer.scrollHeight;
+          currentMsgIndex++;
+          playChatAnimation();
+        }, msg.delay - (currentMsgIndex > 0 ? chatSequence[currentMsgIndex - 1].delay : 0));
+      }
+    }
+
+    // Trigger chat animation when section is visible
+    const chatObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && currentMsgIndex === 0) {
+          playChatAnimation();
+        }
+      });
+    }, { threshold: 0.5 });
+
+    const aiSection = document.getElementById('trimfy-ai');
+    if (aiSection) chatObserver.observe(aiSection);
+
+  </script>
+</body>
+
+</html>
