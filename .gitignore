@@ -1,0 +1,4 @@
+# Local secrets and machine-specific config
+firebase.local-config.js
+*.local-config.js
+!*.local-config.example.js

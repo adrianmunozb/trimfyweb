@@ -8,13 +8,13 @@
     <meta name="description"
         content="Descarga gratis el informe del sector barbería 2026: análisis de más de 10.000 barberías, benchmarks de rentabilidad, retención, precios y crecimiento comercial.">
     <meta name="robots" content="index,follow,max-image-preview:large">
-    <link rel="canonical" href="https://trimfy.es/barber-sector-report.html">
+    <link rel="canonical" href="https://trimfy.es/report">
 
     <meta property="og:type" content="article">
     <meta property="og:title" content="Informe del Sector Barbería 2026 | Ahora Gratis">
     <meta property="og:description"
         content="Informe estratégico con datos de más de 10.000 barberías: márgenes, ocupación, ticket medio, retención y oportunidades de crecimiento.">
-    <meta property="og:url" content="https://trimfy.es/barber-sector-report.html">
+    <meta property="og:url" content="https://trimfy.es/report">
     <meta property="og:site_name" content="Trimfy">
 
     <meta name="twitter:card" content="summary_large_image">
@@ -496,7 +496,7 @@
           "@type": "Report",
           "name": "Informe del Sector Barbería 2026",
           "description": "Informe de negocio para barberías basado en datos de más de 10.000 barberías.",
-          "url": "https://trimfy.es/barber-sector-report.html",
+          "url": "https://trimfy.es/report",
           "inLanguage": "es",
           "datePublished": "2026-03-04",
           "dateModified": "2026-03-04",
@@ -546,7 +546,7 @@
     <nav>
         <div class="logo">TRIMFY. BARBER INTELLIGENCE</div>
         <div class="nav-menu">
-            <a class="nav-link" href="index.html" aria-label="Ir al inicio">Home</a>
+            <a class="nav-link" href="/" aria-label="Ir al inicio">Home</a>
             <p class="nav-meta">Informe 2026</p>
         </div>
     </nav>
@@ -678,14 +678,14 @@
             try {
                 await addDoc(collection(db, 'leads'), {
                     email,
-                    source: 'barber-sector-report',
+                    source: 'report',
                     role: 'barber',
                     report: true,
                     reportName: 'informe-sector-barberia-2026',
                     pricingMessage: 'antes_100_ahora_gratis',
                     timerCycleDays: 7,
                     timestamp: serverTimestamp(),
-                    origin: 'barber-sector-report.html'
+                    origin: 'report/index.html'
                 });
 
                 leadStatusEl.textContent = 'Perfecto. Recibirás el informe en las próximas 24 horas.';
@@ -693,8 +693,7 @@
                 form.reset();
             } catch (error) {
                 console.error('Error al guardar el lead:', error);
-                const errorCode = error?.code ? ` (${error.code})` : '';
-                leadStatusEl.textContent = `No se pudo enviar ahora${errorCode}. Inténtalo de nuevo en unos minutos.`;
+                leadStatusEl.textContent = 'No se pudo enviar ahora. Inténtalo de nuevo en unos minutos.';
                 window.showToast('Error al enviar el formulario.', 'error');
             } finally {
                 leadBtn.disabled = false;
